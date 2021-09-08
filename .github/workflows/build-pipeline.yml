@@ -148,6 +148,8 @@ jobs:
           name: python-artifact
           path: dist/*
       - name: Publist to test.pypi.org
+        env:
+          POETRY_HTTP_BASIC_TEST_USERNAME: __token__
         run: |
           poetry config repositories.testpypi https://test.pypi.org/legacy/
           poetry publish -r testpypi
