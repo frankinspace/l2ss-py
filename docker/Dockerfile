@@ -49,7 +49,7 @@ WORKDIR /worker
 
 COPY --chown=dockeruser $DIST_PATH $DIST_PATH
 USER dockeruser
-RUN pip3 install --use-feature=2020-resolver --force $SOURCE --user \
+RUN pip3 install --force $SOURCE --user \
     && rm -rf $DIST_PATH
 
 # Run the subsetter

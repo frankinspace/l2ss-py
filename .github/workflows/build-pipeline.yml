@@ -1,10 +1,8 @@
-# This is a basic workflow to help you get started with Actions
-
-name: Build Develop branch
-
+# This is the main build pipeline that verifies and publishes the software
+name: Build and Publish
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the develop branch
+  # Triggers the workflow on push or pull request events
   push:
     branches: [ develop, release/*, main, feature/* ]
   pull_request:
@@ -19,9 +17,9 @@ env:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # First job in the workflow builds and verifies the software artifacts
-  build:
-    name: Build and Verify
+  # First job in the workflow installs and verifies the software
+  verify:
+    name: Install and Verify
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     # Only build on push events
@@ -142,11 +140,35 @@ jobs:
         with:
           tag: ${{ env.software_version }}
           message: "Version ${{ env.software_version }}"
+      - name: Build Python Artifact
+        run: |
+          poetry build
+      - name: Upload Python Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: python-artifact
+          path: dist/*
+      - name: Build Docker Image
+        id: build-docker
+        run: echo "::set-output name=$docker_tag::$(./docker/build-docker.sh --local -n l2ss-py -v ${{ env.software_version }})"
 
-
-
-
-#
+#  publish:
+#    name: Build and Publish
+#    # The type of runner that the job will run on
+#    runs-on: ubuntu-latest
+#    # Steps represent a sequence of tasks that will be executed as part of the job
+#    steps:
+#      - name: Build Python Artifact
+#        run: |
+#          poetry build
+#      - name: Upload Python Artifact
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: python-artifact
+#          path: dist/*
+#      - uses: actions/download-artifact@v2
+#        with:
+#          name: python-artifact
 #      - name: Build Docker Image
 #        id: build-docker
 #        run: echo "::set-output name=$docker_tag::$(./docker/build-docker.sh -n l2ss-py -v ${{ env.software_version }})"
