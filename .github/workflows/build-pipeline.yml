@@ -143,14 +143,17 @@ jobs:
       - name: Build Python Artifact
         run: |
           poetry build
-      - name: Upload Python Artifact
-        uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v2
         with:
           name: python-artifact
           path: dist/*
+      - name: Publist to test.pypi.org
+        run: |
+          poetry config repositories.testpypi https://test.pypi.org/legacy/
+          poetry publish -r testpypi
       - name: Build Docker Image
         id: build-docker
-        run: echo "::set-output name=$docker_tag::$(./docker/build-docker.sh --local -n l2ss-py -v ${{ env.software_version }})"
+        run: echo "::set-output name=$docker_tag::$(./docker/build-docker.sh -n l2ss-py -v ${{ env.software_version }})"
 
 #  publish:
 #    name: Build and Publish

@@ -67,7 +67,7 @@ SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 PROJECT_DIR="$(dirname "${SCRIPTPATH}")"
 DIST_PATH="dist/"
 
-repositoryName=podaac/podaac-cloud/${service_name}
+repositoryName=podaac/${service_name}
 
 # Docker tags can't include '+' https://github.com/docker/distribution/issues/1201
 dockerTagVersion=$(echo "${service_version}" | tr "+" _)
