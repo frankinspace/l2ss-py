@@ -169,7 +169,13 @@ jobs:
           tags: |
             type=semver,pattern={{version}},value=${{ env.software_version }}
             type=raw,value=${{ env.extra_tag }}
-
+      - name: Wait for package
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+        run: |
+          pip install tenacity
+          ${GITHUB_WORKSPACE}/.github/workflows/wait-for-pypi.py
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
