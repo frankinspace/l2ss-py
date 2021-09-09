@@ -46,5 +46,6 @@ USER dockeruser
 RUN pip3 install --force $SOURCE --user --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ \
     && rm -rf $DIST_PATH
 
+COPY --chown=dockeruser ./docker/docker-entrypoint.sh docker-entrypoint.sh
 # Run the subsetter
-ENTRYPOINT ["l2ss_harmony"]
+ENTRYPOINT ["./docker-entrypoint.sh"]

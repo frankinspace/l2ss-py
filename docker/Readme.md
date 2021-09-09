@@ -12,9 +12,6 @@ In order to build the image the following build arguments are needed
 - `SOURCE` : The value of this build arg will be used in the `pip install` command to install the l2ss-py package 
 - `DIST_PATH` (optional): The value of this build arg should be the path (relative to the context) to the directory containing a locally built wheel file 
 
-> **Note**: By default the image runs `l2ss_harmony` which requires that the `[harmony]` extra is installed. If
-> the `[harmony]` extra is not installed, the resulting image 
-
 ### Building from PyPi or TestPyPi
 
 If the version of the l2ss-py package has already been uploaded to PyPi, all that is needed is to supply
@@ -47,7 +44,12 @@ docker build -f docker/Dockerfile --build-arg SOURCE="dist/l2ss_py-1.1.0a1-py3-n
 
 ## Running
 
-By default, the docker image `ENTRYPOINT` is set to `l2ss_harmony`. This will execute the 
-l2ss-py package as a [Harmony service](https://github.com/nasa/harmony-service-lib-py).
+If given no arguments, running the docker image will invoke the [Harmony service](https://github.com/nasa/harmony-service-lib-py) CLI.  
+This requires the `[harmony]` extra is installed when installing the `l2ss-py` package from pip (as shown in the examples above).
 
+Alternatively, the image can be run using `l2ss-py` as the command which will run the `l2ss-py` CLI and does not require the 
+`[harmony]` extra package to be installed. Example:
 
+```
+docker run <docker image> l2ss-py -h
+```
