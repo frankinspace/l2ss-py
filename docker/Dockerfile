@@ -10,7 +10,7 @@
 # such information to foreign countries or providing access to foreign
 # persons.
 
-FROM python:3.7-slim
+FROM python:3.8-slim
 
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get upgrade -y \
@@ -33,6 +33,7 @@ ENV PATH="/home/dockeruser/.local/bin:${PATH}"
 RUN mkdir $HOME/.pip
 RUN echo "[global]" >> $HOME/.pip/pip.conf && \
     echo "index-url = https://pypi.org/simple"" >> $HOME/.pip/pip.conf" && \
+    echo "extra-index-url = https://test.pypi.org/simple" >> $HOME/.pip/pip.conf  && \
     echo "trusted-host = pypi.org" >> $HOME/.pip/pip.conf
 
 # The 'SOURCE' argument is what will be used in 'pip install'.
