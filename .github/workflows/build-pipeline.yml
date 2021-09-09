@@ -154,7 +154,7 @@ jobs:
         env:
           POETRY_PYPI_TOKEN_TESTPYPI: ${{secrets.POETRY_PYPI_TOKEN_TESTPYPI}}
         run: |
-          poetry config repositories.testpypi https://test.pypi.org/simple/
+          poetry config repositories.testpypi https://test.pypi.org/legacy/
           poetry publish -r testpypi
 #      - name: Publish to pypi.org
 #        if: ${{ github.ref == 'refs/heads/main' }}
