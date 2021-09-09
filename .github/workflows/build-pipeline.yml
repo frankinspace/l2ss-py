@@ -73,8 +73,8 @@ jobs:
           poetry version ${CURRENT_VERSION%%-rc.*}
           echo "software_version=$(poetry version | awk '{print $2}')" >> $GITHUB_ENV
           echo "extra_tag=ops" >> $GITHUB_ENV
-#      - name: Install l2ss-py
-#        run: poetry install -E harmony
+      - name: Install l2ss-py
+        run: poetry install -E harmony
 #      - name: Lint
 #        run: |
 #          poetry run pylint podaac
@@ -158,6 +158,7 @@ jobs:
 #          poetry publish
       - name: Build Docs
         run: |
+
           poetry run sphinx-build -b html ./docs docs/_build/
       - name: Publish Docs
         uses: JamesIves/github-pages-deploy-action@4.1.5
