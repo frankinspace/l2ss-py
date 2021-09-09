@@ -154,6 +154,15 @@ jobs:
 #          POETRY_PYPI_TOKEN_PYPI: ${{secrets.POETRY_PYPI_TOKEN_PYPI}}
 #        run: |
 #          poetry publish
+      - name: Build Docs
+        run: |
+          poetry run sphinx-build -b html ./docs docs/_build/
+      - name: Publish Docs
+        uses: JamesIves/github-pages-deploy-action@4.1.5
+        with:
+          branch: gh-pages # The branch the action should deploy to.
+          folder: docs/_build/ # The folder the action should deploy.
+          target-folder: ${{ env.software_version }}
       - name: Log in to the Container registry
         uses: docker/login-action@v1
         with:

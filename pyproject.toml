@@ -46,6 +46,8 @@ sphinx = "^2.2"
 pytest-benchmark = "^3.2.3"
 moto = "1.3.14"
 jsonschema = "^3.2.0"
+m2r2 = "^0.3.1"
+sphinx-rtd-theme = "^0.5.2"
 
 [tool.poetry.extras]
 harmony = ["harmony-service-lib", "pystac"]
