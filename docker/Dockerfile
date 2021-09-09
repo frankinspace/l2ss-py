@@ -29,13 +29,6 @@ ENV HOME /home/dockeruser
 ENV PYTHONPATH "${PYTHONPATH}:/home/dockeruser/.local/bin"
 ENV PATH="/home/dockeruser/.local/bin:${PATH}"
 
-# Add artifactory as a trusted pip index
-RUN mkdir $HOME/.pip
-RUN echo "[global]" >> $HOME/.pip/pip.conf && \
-    echo "index-url = https://pypi.org/simple"" >> $HOME/.pip/pip.conf" && \
-    echo "extra-index-url = https://test.pypi.org/simple" >> $HOME/.pip/pip.conf  && \
-    echo "trusted-host = pypi.org" >> $HOME/.pip/pip.conf
-
 # The 'SOURCE' argument is what will be used in 'pip install'.
 ARG SOURCE
 
@@ -50,7 +43,7 @@ WORKDIR /worker
 
 COPY --chown=dockeruser $DIST_PATH $DIST_PATH
 USER dockeruser
-RUN pip3 install --force $SOURCE --user \
+RUN pip3 install --force $SOURCE --user --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ \
     && rm -rf $DIST_PATH
 
 # Run the subsetter
