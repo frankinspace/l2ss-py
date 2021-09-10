@@ -16,7 +16,7 @@ env:
 jobs:
   # First job in the workflow installs and verifies the software
   verify:
-    name: Build, Verify, Publish
+    name: Verify
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     steps:
@@ -73,8 +73,8 @@ jobs:
           poetry version ${CURRENT_VERSION%%-rc.*}
           echo "software_version=$(poetry version | awk '{print $2}')" >> $GITHUB_ENV
           echo "extra_tag=ops" >> $GITHUB_ENV
-#      - name: Install l2ss-py
-#        run: poetry install -E harmony
+      - name: Install l2ss-py
+        run: poetry install -E harmony
 #      - name: Lint
 #        run: |
 #          poetry run pylint podaac
@@ -132,8 +132,38 @@ jobs:
         with:
           tag: ${{ env.software_version }}
           message: "Version ${{ env.software_version }}"
-
-
+      - name: Build Docs
+        run: |
+          poetry run sphinx-build -b html ./docs docs/_build/
+      - name: Publish Docs
+        uses: JamesIves/github-pages-deploy-action@4.1.5
+        with:
+          branch: gh-pages # The branch the action should deploy to.
+          folder: docs/_build/ # The folder the action should deploy.
+          target-folder: ${{ env.software_version }}
+  build:
+    name: Build and Publish
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    needs: verify
+    if: |
+      github.ref == 'refs/heads/develop' ||
+      github.ref == 'refs/heads/main'    ||
+      startsWith(github.ref, 'refs/heads/release')
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install Poetry
+        uses: abatilo/actions-poetry@v2.0.0
+        with:
+          poetry-version: 1.1.8
+      - name: Get version
+        id: get-version
+        run: |
+          echo "::set-output name=current_version::$(poetry version | awk '{print $2}')"
+          echo "pyproject_name=$(poetry version | awk '{print $1}')" >> $GITHUB_ENV
       - name: Build Python Artifact
         run: |
           poetry build
@@ -142,7 +172,9 @@ jobs:
           name: python-artifact
           path: dist/*
       - name: Publish to test.pypi.org
-        if: ${{ github.ref != 'refs/heads/main' }}
+        if: |
+          github.ref == 'refs/heads/develop' ||
+          startsWith(github.ref, 'refs/heads/release')
         env:
           POETRY_PYPI_TOKEN_TESTPYPI: ${{secrets.POETRY_PYPI_TOKEN_TESTPYPI}}
         run: |
@@ -155,13 +187,14 @@ jobs:
 #        run: |
 #          poetry publish
       - name: Log in to the Container registry
+        if: ${{ !startsWith(github.ref, 'refs/heads/feature') }}
         uses: docker/login-action@v1
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Extract metadata (tags, labels) for Docker
+        if: ${{ !startsWith(github.ref, 'refs/heads/feature') }}
         id: meta
         uses: docker/metadata-action@v3
         with:
@@ -170,10 +203,12 @@ jobs:
             type=semver,pattern={{version}},value=${{ env.software_version }}
             type=raw,value=${{ env.extra_tag }}
       - name: Wait for package
+        if: ${{ !startsWith(github.ref, 'refs/heads/feature') }}
         run: |
           pip install tenacity
           ${GITHUB_WORKSPACE}/.github/workflows/wait-for-pypi.py ${{env.pyproject_name}}[harmony]==${{ env.software_version }}
       - name: Build and push Docker image
+        if: ${{ !startsWith(github.ref, 'refs/heads/feature') }}
         uses: docker/build-push-action@v2
         with:
           context: .
