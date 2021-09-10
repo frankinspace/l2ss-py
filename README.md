@@ -1,6 +1,9 @@
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=frankinspace_l2ss-py&metric=coverage)](https://sonarcloud.io/dashboard?id=frankinspace_l2ss-py)
 
 # l2ss-py
+
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=frankinspace_l2ss-py&metric=coverage)](https://sonarcloud.io/dashboard?id=frankinspace_l2ss-py)
+[![Develop Build](https://github.com/frankinspace/l2ss-py/actions/workflows/build-pipeline.yml/badge.svg?branch=develop&event=push)](https://github.com/frankinspace/l2ss-py/actions/workflows/build-pipeline.yml)
+[![Main Build](https://github.com/frankinspace/l2ss-py/actions/workflows/build-pipeline.yml/badge.svg?branch=main&event=push)](https://github.com/frankinspace/l2ss-py/actions/workflows/build-pipeline.yml)
 
 Harmony service for subsetting L2 data. l2ss-py supports:
 
