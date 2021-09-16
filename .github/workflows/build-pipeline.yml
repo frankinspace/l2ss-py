@@ -93,7 +93,6 @@ jobs:
             -Dsonar.organization=frankinspace
             -Dsonar.projectKey=frankinspace_l2ss-py
             -Dsonar.python.coverage.reportPaths=build/reports/coverage.xml
-            -Dsonar.junit.reportPaths=build/reports/pytest.xml
             -Dsonar.sources=podaac/
             -Dsonar.tests=tests/
             -Dsonar.projectName=l2ss-py
@@ -206,10 +205,14 @@ jobs:
           args: >
             --severity-threshold=high
             --fail-on=all
-            --sarif-file-output=${{ env.SNYK_OUTPUT_SARIF }}/docker.sarif
             --file=docker/Dockerfile
+            --sarif-file-output=${{ env.SNYK_OUTPUT_SARIF }}/docker.sarif
+      - name: Wait for package
+        if: ${{ !startsWith(github.ref, 'refs/heads/feature') }}
+        run: |
+          ls -la ${{ env.SNYK_OUTPUT_SARIF }}
       - name: Upload result to GitHub Code Scanning
         if: ${{ !startsWith(github.ref, 'refs/heads/feature') }}
         uses: github/codeql-action/upload-sarif@v1
         with:
-          sarif_file: ${{ env.SNYK_OUTPUT_SARIF }}/
+          sarif_file: ${{ env.SNYK_OUTPUT_SARIF }}
