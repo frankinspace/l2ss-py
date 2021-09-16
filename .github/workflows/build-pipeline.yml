@@ -202,7 +202,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          image: ${{ steps.meta.outputs.tags }}
+          image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.software_version }}
           args: >
             --severity-threshold=high
             --fail-on=all
@@ -212,4 +212,4 @@ jobs:
         if: ${{ !startsWith(github.ref, 'refs/heads/feature') }}
         uses: github/codeql-action/upload-sarif@v1
         with:
-          sarif_file: ${{ env.SNYK_OUTPUT_SARIF }}/
+          sarif_file: ${{ env.SNYK_OUTPUT_SARIF }}/*
