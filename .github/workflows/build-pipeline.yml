@@ -108,7 +108,7 @@ jobs:
           args: >
             --severity-threshold=high
             --fail-on=all
-            --sarif-file-output=$SNYK_OUTPUT_SARIF/python.sarif
+            --sarif-file-output=${{ env.SNYK_OUTPUT_SARIF }}/python.sarif
       - name: Commit Version Bump
         # If building develop, a release branch, or main then we commit the version bump back to the repo
         if: |
@@ -206,10 +206,10 @@ jobs:
           args: >
             --severity-threshold=high
             --fail-on=all
-            --sarif-file-output=$SNYK_OUTPUT_SARIF/docker.sarif
+            --sarif-file-output=${{ env.SNYK_OUTPUT_SARIF }}/docker.sarif
             --file=docker/Dockerfile
       - name: Upload result to GitHub Code Scanning
         if: ${{ !startsWith(github.ref, 'refs/heads/feature') }}
         uses: github/codeql-action/upload-sarif@v1
         with:
-          sarif_file: $SNYK_OUTPUT_SARIF/
+          sarif_file: ${{ env.SNYK_OUTPUT_SARIF }}/
