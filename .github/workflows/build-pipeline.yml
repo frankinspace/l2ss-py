@@ -12,7 +12,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  SNYK_OUTPUT_SARIF: ${{ github.workspace }}/snyk-output
+  SNYK_OUTPUT_SARIF: snyk-output
 
 jobs:
   # First job in the workflow installs and verifies the software
