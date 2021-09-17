@@ -67,7 +67,7 @@ SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 PROJECT_DIR="$(dirname "${SCRIPTPATH}")"
 DIST_PATH="dist/"
 
-repositoryName=podaac/podaac-cloud/${service_name}
+repositoryName=podaac/${service_name}
 
 # Docker tags can't include '+' https://github.com/docker/distribution/issues/1201
 dockerTagVersion=$(echo "${service_version}" | tr "+" _)
@@ -75,9 +75,9 @@ dockerTagVersion=$(echo "${service_version}" | tr "+" _)
 # Build the image
 if [ "$LOCAL_BUILD" = true ] ; then
   wheel_filename="$(echo "${service_name}" | tr "-" _)-${service_version}-py3-none-any.whl"
-  docker build -t "${repositoryName}":"${dockerTagVersion}" --build-arg DIST_PATH="${DIST_PATH}" --build-arg SOURCE="${DIST_PATH}${wheel_filename}[podaac,harmony]" -f "$SCRIPTPATH"/Dockerfile "$PROJECT_DIR" 1>&2
+  docker build -t "${repositoryName}":"${dockerTagVersion}" --build-arg DIST_PATH="${DIST_PATH}" --build-arg SOURCE="${DIST_PATH}${wheel_filename}[harmony]" -f "$SCRIPTPATH"/Dockerfile "$PROJECT_DIR" 1>&2
 else
-  docker build -t "${repositoryName}":"${dockerTagVersion}" --build-arg SOURCE="${service_name}[podaac,harmony]==${service_version}" -f "$SCRIPTPATH"/Dockerfile "$SCRIPTPATH" 1>&2
+  docker build -t "${repositoryName}":"${dockerTagVersion}" --build-arg SOURCE="${service_name}[harmony]==${service_version}" -f "$SCRIPTPATH"/Dockerfile "$SCRIPTPATH" 1>&2
 fi
 
 
