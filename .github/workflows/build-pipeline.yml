@@ -178,7 +178,6 @@ jobs:
         run: |
           pip install tenacity
           ${GITHUB_WORKSPACE}/.github/workflows/wait-for-pypi.py ${{env.pyproject_name}}[harmony]==${{ env.software_version }}
-          rm snyk.sarif || true
       - name: Build and push Docker image
         if: ${{ !startsWith(github.ref, 'refs/heads/feature') }}
         uses: docker/build-push-action@v2
