@@ -460,9 +460,9 @@ def get_time_variable_name(dataset, lat_var):
     """
     Try to determine the name of the 'time' variable. This is done as
     follows:
-        - The variable name contains 'time'
-        - The variable dimensions match the dimensions of the given
-        lat var
+
+    - The variable name contains 'time'
+    - The variable dimensions match the dimensions of the given lat var
 
     Parameters
     ----------
