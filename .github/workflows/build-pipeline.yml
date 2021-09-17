@@ -105,7 +105,6 @@ jobs:
         with:
           args: >
             --severity-threshold=high
-            --fail-on=all
             --sarif-file-output=python.sarif
       - name: Commit Version Bump
         # If building develop, a release branch, or main then we commit the version bump back to the repo
@@ -203,14 +202,7 @@ jobs:
           image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.software_version }}
           args: >
             --severity-threshold=high
-            --fail-on=all
             --file=docker/Dockerfile
-            --sarif-file-output=docker.sarif
-      - name: Wait for package
-        if: ${{ !startsWith(github.ref, 'refs/heads/feature') }}
-        run: |
-          pwd
-          ls -la .
       - name: Upload result to GitHub Code Scanning
         if: ${{ !startsWith(github.ref, 'refs/heads/feature') }}
         uses: github/codeql-action/upload-sarif@v1
